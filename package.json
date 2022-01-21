@@ -1,6 +1,6 @@
 {
     "name": "lng-storage",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "description": "Lightning Dynamic Storage Plugin",
     "main": "src/index.js",
     "keywords": [
