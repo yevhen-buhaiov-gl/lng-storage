@@ -1,0 +1,18 @@
+{
+    "name": "lng-storage",
+    "version": "2.0.0",
+    "description": "Lightning Dynamic Storage Plugin",
+    "main": "src/index.js",
+    "keywords": [
+        "lng",
+        "lightning",
+        "storage",
+        "webgl"
+    ],
+    "author": "Yevhen Buhaiov",
+    "license": "ISC",
+    "dependencies": {
+        "js-cookie": "^3.0.1",
+        "lodash.isequal": "^4.5.0"
+    }
+}
