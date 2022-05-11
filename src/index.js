@@ -1,22 +1,37 @@
 import Storage from './components/storage';
-
-/**
- * Main LDSP
- */
 export class LngDynamicStoragePlugin {
-    #storages = [];
+    #storages = new Map();
+    #init = false;
+
+    static createStorage() {
+        if (!this.instance) {
+            this.instance = new LngDynamicStoragePlugin();
+        }
+        return this.instance;
+    }
 
     init(config = []) {
+        if (this.#init) return console.info('#LDSP already inited.');
+        if (lng?.Component) {
+            const that = this;
+            lng.Component.prototype._onDetach = (function (func) {
+                return function () {
+                    that.removeActions(this.id);
+                    func.apply(this, arguments);
+                };
+            })(lng.Component.prototype._onDetach);
+        }
         config.forEach((storageConfig) => {
-            this.#storages.push({
-                name: storageConfig.name,
-                instance: new Storage(storageConfig.namespace, storageConfig.defaultValues),
-            });
+            this.#storages.set(
+                storageConfig.name,
+                new Storage(storageConfig.namespace, storageConfig.defaultValues)
+            );
         });
+        this.#init = true;
     }
 
     getStorage(name) {
-        return this.#storages?.find((storage) => storage.name === name)?.instance;
+        return this.#storages.get(name);
     }
 
     setToDefault(name) {
@@ -53,8 +68,6 @@ export class LngDynamicStoragePlugin {
     }
 }
 
-const LDSP = new LngDynamicStoragePlugin();
-
-Object.freeze(LDSP);
+const LDSP = LngDynamicStoragePlugin.createStorage();
 
 export default LDSP;

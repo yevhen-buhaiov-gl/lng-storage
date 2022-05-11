@@ -58,7 +58,9 @@ export default class Storage {
     }
 
     setItems(data) {
-        data.forEach(({ key, value, external }) => this.set(key, value, external));
+        data.forEach(({ key, value, external, checkEqualValue }) =>
+            this.set(key, value, external, checkEqualValue)
+        );
     }
 
     setActionFunc(key, contextId, action) {
