@@ -1,12 +1,12 @@
 ## Lightning Dynamic Storage Plugin
 
-Plugin that created to simplify data storage and dynamicaly update the Lightning components✨
+Plugin that created to simplify data storage and dynamically update the Lightning components✨
 
 ## Init
 
 ```
-LDSP.init([ 
-    { 
+LDSP.init([
+    {
         name: 'main', // Storage name
         namespace: 'lng.main', // namespace for LocalStorage to split storage and exclude collisions
         defaultValues: [{key: 'color', value: 0xff225cb3, external: true }] // default values object
@@ -60,6 +60,8 @@ export default class Home extends Lightning.Component {
 }
 ```
 
+Githab repository with an example of usage storage + router [public repository][lng-storage-usage].
+
 ## Methods
 
 ```
@@ -73,7 +75,7 @@ LDSP.setToDefault(storageName) - Set storage data to default values by storage n
 
 LDSP.getAll(storageName) - Get whole storage object by storage name;
 
-contextId - Component.id;
+NOTE: To prevent memoty leak we should delete all callbacks when component have been detached and should pass Lightning component is as contextId!
 LDSP.addAction(storageName, key, contextId, callback) - Add an event for the key that will be triggered when the value is changed (callback(key, oldValue, newValue));
 
 LDSP.addActions(storageName, keys, contextId, callback) - Add an event for the keys (Array of keys) that will be triggered when the value of some key is changed (callback(key, oldValue, newValue));
@@ -83,4 +85,5 @@ LDSP.removeActions(storageName, contextId) - Removes all actions of storage for 
 
 GitHub [public repository][lng-storage].
 
-[lng-storage]: <https://github.com/yevhen-buhaiov-gl/lng-storage>
+[lng-storage]: https://github.com/yevhen-buhaiov-gl/lng-storage
+[lng-storage-usage]: https://github.com/yevhen-buhaiov-gl/lng-storage-usage

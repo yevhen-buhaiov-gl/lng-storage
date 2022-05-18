@@ -5,16 +5,37 @@ class LocalCookie {
         this.forceCookies = options.forceCookies || !this._checkIfLocalStorageWorks();
     }
 
+    /**
+     * @param {string} key
+     * @param {any} value
+     */
     setItem(key, value) {
-        return !this.forceCookies
-            ? this._setItemLocalStorage(key, value)
-            : this._setItemCookie(key, value);
+        try {
+            const stringValue = JSON.stringify(value);
+            return !this.forceCookies
+                ? this._setItemLocalStorage(key, stringValue)
+                : this._setItemCookie(key, stringValue);
+        } catch (e) {
+            return;
+        }
     }
 
+    /**
+     * @param {string} key
+     */
     getItem(key) {
-        return !this.forceCookies ? this._getItemLocalStorage(key) : this._getItemCookie(key);
+        try {
+            return JSON.parse(
+                !this.forceCookies ? this._getItemLocalStorage(key) : this._getItemCookie(key)
+            );
+        } catch (e) {
+            return;
+        }
     }
 
+    /**
+     * @param {string} key
+     */
     removeItem(key) {
         return !this.forceCookies ? this._removeItemLocalStorage(key) : this._removeItemCookie(key);
     }
@@ -24,47 +45,59 @@ class LocalCookie {
     }
 
     _clearCookies() {
-        // empty all key/values in cookies
         document.cookie.split(';').forEach((c) => {
             document.cookie = c.replace(/^ +/, '').replace(/=.*/, '=;expires=Max-Age=-99999999');
         });
-
-        return; //return undefined
     }
 
     _clearLocalStorage() {
         return window.localStorage.clear();
     }
 
+    /**
+     * @param {string} key
+     */
     _removeItemCookie(key) {
-        // to delete an k/v set the key to empty
         Cookies.remove(key);
-        return; //return undefined just like localStorage
     }
 
+    /**
+     * @param {string} key
+     */
     _removeItemLocalStorage(key) {
         window.localStorage.removeItem(key);
     }
 
+    /**
+     * @param {string} key
+     * @param {string} value
+     */
     _setItemLocalStorage(key, value) {
         return window.localStorage.setItem(key, value);
     }
 
+    /**
+     * @param {string} key
+     * @param {any} value
+     */
     _setItemCookie(key, value) {
-        var now = new Date();
-        var expires = new Date(now.getTime() + 1000 * 60 * 60 * 24 * 365 * 5);
-        document.cookie = `${key}=${value}; expires=${expires.toUTCString()};`;
-        return; //return undefined just like localStorage
+        Cookies.set(key, value, { expires: 365 * 5 });
     }
 
     keys() {
         return this.forceCookies ? this._getCookieKeys() : this._getLocalStorageKeys();
     }
 
+    /**
+     * @param {string} key
+     */
     _getItemLocalStorage(key) {
         return window.localStorage.getItem(key);
     }
 
+    /**
+     * @param {string} key
+     */
     _getItemCookie(key) {
         return Cookies.get(key);
     }
