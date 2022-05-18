@@ -7,6 +7,9 @@ export default class Storage {
     #default = {};
     #actionFunctions = new Map();
 
+    /**
+     * @param {string} namespace
+     */
     constructor(namespace, defaultValues = []) {
         this.#namespace = namespace;
         defaultValues.forEach(({ key, value }) => {
@@ -16,6 +19,9 @@ export default class Storage {
         this.syncData();
     }
 
+    /**
+     * @param {string} prop
+     */
     getPropWithNamespace(prop) {
         return `${this.#namespace}.${prop}`;
     }
@@ -26,16 +32,26 @@ export default class Storage {
         }
     }
 
+    /**
+     * @param {string} prop
+     * @param {any} oldValue
+     * @param {any} newValue
+     */
     runActions(prop, oldValue, newValue) {
         const key = this.getPropWithNamespace(prop);
         const propFunctions = this.#actionFunctions.get(key);
-        propFunctions?.forEach((functions) => {
-            functions.forEach((funcName) => {
-                funcName(prop, oldValue, newValue);
-            });
+        propFunctions?.forEach((/** @type {any[]} */ functions) => {
+            functions.forEach(
+                (/** @type {(arg0: any, arg1: any, arg2: any) => void} */ funcName) => {
+                    funcName(prop, oldValue, newValue);
+                }
+            );
         });
     }
 
+    /**
+     * @param {string} key
+     */
     get(key) {
         return this.getData(key);
     }
@@ -48,6 +64,10 @@ export default class Storage {
         return data;
     }
 
+    /**
+     * @param {string} key
+     * @param {any} value
+     */
     set(key, value, external = false, runActions = true, checkEqualValue = true) {
         if (external) {
             LocalCookie.setItem(this.getPropWithNamespace(key), value);
@@ -57,12 +77,20 @@ export default class Storage {
         }
     }
 
+    /**
+     * @param {{ key: string; value: any; external: boolean; checkEqualValue: boolean; }[]} data
+     */
     setItems(data) {
         data.forEach(({ key, value, external, checkEqualValue }) =>
             this.set(key, value, external, checkEqualValue)
         );
     }
 
+    /**
+     * @param {string} key
+     * @param {string | number} contextId
+     * @param {(key: string, oldvalue: any, newvalue: any) => void} action
+     */
     setActionFunc(key, contextId, action) {
         const keyWithPrefix = this.getPropWithNamespace(key);
         const stringContextId = String(contextId);
@@ -79,6 +107,9 @@ export default class Storage {
         }
     }
 
+    /**
+     * @param {string | number} contextId
+     */
     removeAllActions(contextId) {
         if (this.#actionFunctions) {
             const stringContextId = String(contextId);
@@ -90,7 +121,7 @@ export default class Storage {
 
     syncData() {
         LocalCookie.keys()
-            .map((key) => ({ key, value: LocalCookie.getItem(key) }))
+            ?.map((key) => ({ key, value: LocalCookie.getItem(key) }))
             .forEach(({ key, value }) => {
                 if (key.indexOf(this.#namespace) !== -1) {
                     const prop = key.replace(`${this.#namespace}.`, '');
@@ -99,10 +130,19 @@ export default class Storage {
             });
     }
 
+    /**
+     * @param {string} key
+     */
     getData(key) {
         return this.#data[this.getPropWithNamespace(key)];
     }
 
+    /**
+     * @param {string} prop
+     * @param {any} value
+     * @param {boolean} runActions
+     * @param {boolean} [checkEqualValue]
+     */
     setData(prop, value, runActions, checkEqualValue) {
         const propWithPrefix = this.getPropWithNamespace(prop);
         const oldValue = this.#data[propWithPrefix];
