@@ -9,9 +9,7 @@ export class LightningStorage {
         }
         return this.instance;
     }
-    /**
-     * @param {[]} config
-     */
+
     init(config = [], log = false) {
         if (this.#init) return console.info("# You can't init LS twice.");
         if (lng?.Component) {

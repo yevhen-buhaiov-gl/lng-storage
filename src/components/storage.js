@@ -13,13 +13,20 @@ export default class Storage {
      * @param {any[]} defaultValues
      * @param {boolean} log
      */
-    constructor(namespace, defaultValues = [], log) {
+    constructor(namespace, defaultValues, log) {
         this.#namespace = namespace;
         this.#log = log;
-        defaultValues.forEach(({ key, value }) => {
-            this.#default[this.getPropWithNamespace(key)] = value;
-            this.set(key, value);
-        });
+        if (Array.isArray(defaultValues)) {
+            defaultValues.forEach(({ key, value }) => {
+                this.#default[this.getPropWithNamespace(key)] = value;
+                this.set(key, value);
+            });
+        } else if (typeof defaultValues === 'object' && defaultValues !== null) {
+            for (const key in defaultValues) {
+                this.#default[this.getPropWithNamespace(key)] = defaultValues[key];
+                this.set(key, defaultValues[key]);
+            }
+        }
         this.syncData();
     }
 
