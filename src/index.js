@@ -2,7 +2,6 @@ import Storage from './components/storage';
 export class LngDynamicStoragePlugin {
     #storages = new Map();
     #init = false;
-    #log = false;
 
     static createStorage() {
         if (!this.instance) {
