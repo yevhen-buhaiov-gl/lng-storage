@@ -1,4 +1,4 @@
-## Lightning Dynamic Storage Plugin
+## Lightning Storage
 
 Plugin that created to simplify data storage and dynamically update the Lightning components✨
 
@@ -7,7 +7,7 @@ GitHub repository with an example of usage storage + router [public repository][
 ## Init
 
 ```
-LDSP.init([
+LS.init([
     {
         name: 'main', // Storage name
         namespace: 'lng.main', // namespace for LocalStorage to split storage and exclude collisions
@@ -20,11 +20,11 @@ LDSP.init([
 
 ```
 import { Lightning, Utils } from "@lightningjs/sdk";
-import LDSP from "lng-storage";
+import LS from "lng-storage";
 
 export default class Home extends Lightning.Component {
     _setup() {
-      LDSP.addAction('main', 'color', this.id, this._setBackgroundColor);
+      LS.addAction('main', 'color', this.id, this._setBackgroundColor);
     }
 
     _init() {
@@ -33,7 +33,7 @@ export default class Home extends Lightning.Component {
           rect: true,
           w: 1920,
           h: 1080,
-          color: LDSP.get('main', 'color'),
+          color: LS.get('main', 'color'),
         },
         Logo: {
           mountX: 0.5,
@@ -65,22 +65,22 @@ export default class Home extends Lightning.Component {
 ## Methods
 
 ```
-LDSP.init(config, log) - Initialization of the Storages;
+LS.init(config, log) - Initialization of the Storages;
 
-LDSP.get(storageName, key) - Get data by storage name and property key;
+LS.get(storageName, key) - Get data by storage name and property key;
 
-LDSP.set(storageName, key, value) - Set data by storage name and propery key;
+LS.set(storageName, key, value) - Set data by storage name and propery key;
 
-LDSP.setToDefault(storageName) - Set storage data to default values by storage name;
+LS.setToDefault(storageName) - Set storage data to default values by storage name;
 
-LDSP.getAll(storageName) - Get whole storage object by storage name;
+LS.getAll(storageName) - Get whole storage object by storage name;
 
 NOTE: To prevent memoty leak we should delete all callbacks when component have been detached and should pass Lightning component is as contextId!
-LDSP.addAction(storageName, key, contextId, callback) - Add an event for the key that will be triggered when the value is changed (callback(key, oldValue, newValue));
+LS.addAction(storageName, key, contextId, callback) - Add an event for the key that will be triggered when the value is changed (callback(key, oldValue, newValue));
 
-LDSP.addActions(storageName, keys, contextId, callback) - Add an event for the keys (Array of keys) that will be triggered when the value of some key is changed (callback(key, oldValue, newValue));
+LS.addActions(storageName, keys, contextId, callback) - Add an event for the keys (Array of keys) that will be triggered when the value of some key is changed (callback(key, oldValue, newValue));
 
-LDSP.removeActions(storageName, contextId) - Removes all actions of storage for separate contextId;
+LS.removeActions(storageName, contextId) - Removes all actions of storage for separate contextId;
 ```
 
 GitHub [public repository][lng-storage].

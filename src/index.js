@@ -1,11 +1,11 @@
 import Storage from './components/storage';
-export class LngDynamicStoragePlugin {
+export class LightningStorage {
     #storages = new Map();
     #init = false;
 
     static createStorage() {
         if (!this.instance) {
-            this.instance = new LngDynamicStoragePlugin();
+            this.instance = new LightningStorage();
         }
         return this.instance;
     }
@@ -13,7 +13,7 @@ export class LngDynamicStoragePlugin {
      * @param {[]} config
      */
     init(config = [], log = false) {
-        if (this.#init) return console.info('#LDSP already inited.');
+        if (this.#init) return console.info("# You can't init LS twice.");
         if (lng?.Component) {
             const that = this;
             lng.Component.prototype._onDetach = (function (func) {
@@ -107,6 +107,6 @@ export class LngDynamicStoragePlugin {
     }
 }
 
-const LDSP = LngDynamicStoragePlugin.createStorage();
+const LS = LightningStorage.createStorage();
 
-export default LDSP;
+export default LS;
