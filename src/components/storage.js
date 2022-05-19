@@ -5,13 +5,17 @@ export default class Storage {
     #namespace = '';
     #data = {};
     #default = {};
+    #log = false;
     #actionFunctions = new Map();
 
     /**
      * @param {string} namespace
+     * @param {any[]} defaultValues
+     * @param {boolean} log
      */
-    constructor(namespace, defaultValues = []) {
+    constructor(namespace, defaultValues = [], log) {
         this.#namespace = namespace;
+        this.#log = log;
         defaultValues.forEach(({ key, value }) => {
             this.#default[this.getPropWithNamespace(key)] = value;
             this.set(key, value);
@@ -71,9 +75,9 @@ export default class Storage {
     set(key, value, external = false, runActions = true, checkEqualValue = true) {
         if (external) {
             LocalCookie.setItem(this.getPropWithNamespace(key), value);
-            this.set(key, value, false, runActions, checkEqualValue);
+            return this.set(key, value, false, runActions, checkEqualValue);
         } else {
-            this.setData(key, value, runActions, checkEqualValue);
+            return this.setData(key, value, runActions, checkEqualValue);
         }
     }
 
@@ -147,9 +151,22 @@ export default class Storage {
         const propWithPrefix = this.getPropWithNamespace(prop);
         const oldValue = this.#data[propWithPrefix];
         if (checkEqualValue && isEqual(oldValue, value)) return;
+        if (this.#log) this._log(`Set [${propWithPrefix}]:`, { current: value, prev: oldValue });
         this.#data[propWithPrefix] = value;
-        if (runActions) {
-            this.runActions(prop, oldValue, value);
-        }
+        if (runActions) this.runActions(prop, oldValue, value);
+    }
+
+    /**
+     * @param {string} name
+     * @param {{ current: any; prev: any; }} props
+     */
+    _log(name, props) {
+        console.groupCollapsed(
+            `%c${name}`,
+            'background-color: #4B0082; color: white; padding: 2px 4px; border-radius: 2px',
+            props
+        );
+        console.trace('Stack trace');
+        console.groupEnd();
     }
 }
