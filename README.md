@@ -13,7 +13,7 @@ LDSP.init([
         namespace: 'lng.main', // namespace for LocalStorage to split storage and exclude collisions
         defaultValues: [{key: 'color', value: 0xff225cb3, external: true }] // default values object
     }
-]);
+], true); // by default log parameter is false
 ```
 
 ## Basic Usage
@@ -65,7 +65,7 @@ export default class Home extends Lightning.Component {
 ## Methods
 
 ```
-LDSP.init(config) - Initialization of the Storages;
+LDSP.init(config, log) - Initialization of the Storages;
 
 LDSP.get(storageName, key) - Get data by storage name and property key;
 
