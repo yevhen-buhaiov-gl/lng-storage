@@ -2,6 +2,7 @@ import Storage from './components/storage';
 export class LngDynamicStoragePlugin {
     #storages = new Map();
     #init = false;
+    #log = false;
 
     static createStorage() {
         if (!this.instance) {
@@ -12,7 +13,7 @@ export class LngDynamicStoragePlugin {
     /**
      * @param {[]} config
      */
-    init(config = []) {
+    init(config = [], log = false) {
         if (this.#init) return console.info('#LDSP already inited.');
         if (lng?.Component) {
             const that = this;
@@ -26,7 +27,7 @@ export class LngDynamicStoragePlugin {
             return console.error('Lightning is not loaded.');
         }
         config.forEach(({ name, namespace, defaultValues }) =>
-            this.#storages.set(name, new Storage(namespace, defaultValues))
+            this.#storages.set(name, new Storage(namespace, defaultValues, log))
         );
         this.#init = true;
     }

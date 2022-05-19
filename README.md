@@ -62,6 +62,8 @@ export default class Home extends Lightning.Component {
 }
 ```
 
+Githab repository with an example of usage storage + router [public repository][lng-storage-usage].
+
 ## Methods
 
 ```
