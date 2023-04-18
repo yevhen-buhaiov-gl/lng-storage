@@ -1,12 +1,10 @@
 import Storage from './components/storage';
-export class LightningStorage {
+class LightningStorage {
     #storages = new Map();
     #init = false;
 
     static createStorage() {
-        if (!this.instance) {
-            this.instance = new LightningStorage();
-        }
+        if (!this.instance) this.instance = new LightningStorage();
         return this.instance;
     }
 
@@ -24,7 +22,7 @@ export class LightningStorage {
             return console.error('Lightning is not loaded.');
         }
         config.forEach(({ name, namespace, defaultValues }) =>
-            this.#storages.set(name, new Storage(namespace, defaultValues, log))
+            this.#storages.set(name, new Storage(`${name}.${namespace}.`, defaultValues, log))
         );
         this.#init = true;
     }
@@ -62,6 +60,9 @@ export class LightningStorage {
      * @param {string} name
      * @param {string} key
      * @param {any} value
+     * @param external
+     * @param runActions
+     * @param checkEqualValue
      */
     set(name, key, value, external = false, runActions = true, checkEqualValue = true) {
         this._getStorage(name)?.set(key, value, external, runActions, checkEqualValue);

@@ -1,6 +1,6 @@
 {
     "name": "lng-storage",
-    "version": "2.1.2",
+    "version": "2.1.3",
     "description": "Lightning Storage",
     "main": "dist/index.cjs.js",
     "module": "dist/index.esm.js",

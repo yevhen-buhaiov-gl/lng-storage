@@ -17,15 +17,10 @@ export default class Storage {
         this.#namespace = namespace;
         this.#log = log;
         if (Array.isArray(defaultValues)) {
-            defaultValues.forEach(({ key, value }) => {
+            defaultValues.forEach(({ key, value, external }) => {
                 this.#default[this.getPropWithNamespace(key)] = value;
-                this.set(key, value);
+                this.set(key, value, external);
             });
-        } else if (typeof defaultValues === 'object' && defaultValues !== null) {
-            for (const key in defaultValues) {
-                this.#default[this.getPropWithNamespace(key)] = defaultValues[key];
-                this.set(key, defaultValues[key]);
-            }
         }
         this.syncData();
     }
@@ -34,12 +29,12 @@ export default class Storage {
      * @param {string} prop
      */
     getPropWithNamespace(prop) {
-        return `${this.#namespace}.${prop}`;
+        return `${this.#namespace}${prop}`;
     }
 
     setToDefault(runActions = true) {
         for (const key in this.#default) {
-            this.setData(key.replace(`${this.#namespace}.`, ''), this.#default[key], runActions);
+            this.setData(key.replace(`${this.#namespace}`, ''), this.#default[key], runActions);
         }
     }
 
@@ -70,7 +65,7 @@ export default class Storage {
     getAll() {
         const data = {};
         for (const item in this.#data) {
-            data[item.replace(`${this.#namespace}.`, '')] = this.#data[item];
+            data[item.replace(`${this.#namespace}`, '')] = this.#data[item];
         }
         return data;
     }
@@ -78,6 +73,9 @@ export default class Storage {
     /**
      * @param {string} key
      * @param {any} value
+     * @param external
+     * @param runActions
+     * @param checkEqualValue
      */
     set(key, value, external = false, runActions = true, checkEqualValue = true) {
         if (external) {
@@ -135,7 +133,7 @@ export default class Storage {
             ?.map((key) => ({ key, value: LocalCookie.getItem(key) }))
             .forEach(({ key, value }) => {
                 if (key.indexOf(this.#namespace) !== -1) {
-                    const prop = key.replace(`${this.#namespace}.`, '');
+                    const prop = key.replace(`${this.#namespace}`, '');
                     this.set(prop, value);
                 }
             });
