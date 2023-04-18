@@ -10,7 +10,6 @@ GitHub repository with an example of usage storage + router [public repository][
 LS.init([
     {
         name: 'main', // Storage name
-        namespace: 'lng.main', // namespace for LocalStorage to split storage and exclude collisions
         defaultValues: [{key: 'color', value: 0xff225cb3, external: true }] // default values object
     }
 ], true); // by default log parameter is false

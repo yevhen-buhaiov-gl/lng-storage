@@ -2,19 +2,19 @@ import LocalCookie from '../modules/localCookie';
 import isEqual from 'lodash.isequal';
 
 export default class Storage {
-    #namespace = '';
+    #name = '';
     #data = {};
     #default = {};
     #log = false;
     #actionFunctions = new Map();
 
     /**
-     * @param {string} namespace
+     * @param {string} name
      * @param {any[]} defaultValues
      * @param {boolean} log
      */
-    constructor(namespace, defaultValues, log) {
-        this.#namespace = namespace;
+    constructor(name, defaultValues, log) {
+        this.#name = name;
         this.#log = log;
         if (Array.isArray(defaultValues)) {
             defaultValues.forEach(({ key, value, external }) => {
@@ -29,12 +29,12 @@ export default class Storage {
      * @param {string} prop
      */
     getPropWithNamespace(prop) {
-        return `${this.#namespace}${prop}`;
+        return `${this.#name}${prop}`;
     }
 
     setToDefault(runActions = true) {
         for (const key in this.#default) {
-            this.setData(key.replace(`${this.#namespace}`, ''), this.#default[key], runActions);
+            this.setData(key.replace(`${this.#name}`, ''), this.#default[key], runActions);
         }
     }
 
@@ -65,7 +65,7 @@ export default class Storage {
     getAll() {
         const data = {};
         for (const item in this.#data) {
-            data[item.replace(`${this.#namespace}`, '')] = this.#data[item];
+            data[item.replace(`${this.#name}`, '')] = this.#data[item];
         }
         return data;
     }
@@ -132,8 +132,8 @@ export default class Storage {
         LocalCookie.keys()
             ?.map((key) => ({ key, value: LocalCookie.getItem(key) }))
             .forEach(({ key, value }) => {
-                if (key.indexOf(this.#namespace) !== -1) {
-                    const prop = key.replace(`${this.#namespace}`, '');
+                if (key.indexOf(this.#name) !== -1) {
+                    const prop = key.replace(`${this.#name}`, '');
                     this.set(prop, value);
                 }
             });

@@ -21,8 +21,8 @@ class LightningStorage {
         } else {
             return console.error('Lightning is not loaded.');
         }
-        config.forEach(({ name, namespace, defaultValues }) =>
-            this.#storages.set(name, new Storage(`${name}.${namespace}.`, defaultValues, log))
+        config.forEach(({ name, defaultValues }) =>
+            this.#storages.set(name, new Storage(`${name}.`, defaultValues, log))
         );
         this.#init = true;
     }
